@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 Flask==2.3.3
 Werkzeug==2.3.8
 Jinja2==3.1.2
 itsdangerous==2.1.2
 click==8.2.1
 psycopg2-binary==2.9.8
+=======
+Flask==2.3.3
+Werkzeug==2.3.8
+Jinja2==3.1.2
+itsdangerous==2.1.2
+click==8.2.1
+psycopg2-binary==2.9.8
+>>>>>>> 1e8644f891b8f5d5f94c155bb722e7cd69a672fb
 gunicorn==21.2.0
