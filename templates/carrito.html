@@ -1,95 +1,172 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Carrito - Gustica</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carrito - Gustica</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='chatbot.css') }}" />
+  <style>
+    /* Pequeño ajuste para el botón de eliminar */
+    .producto-carrito {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ccc;
+      padding: 8px 0;
+    }
+    .producto-carrito img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .producto-info {
+      flex: 1;
+      margin-left: 10px;
+    }
+    .producto-cantidad {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .eliminar-btn {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #cancelar-pedido {
+      background: #f44336;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #cancelar-pedido:hover {
+      background: #d32f2f;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-        </div>
-        <nav>
-            <a href="{{ url_for('inicio') }}">Inicio</a>
-            <a href="{{ url_for('quienes') }}">Quiénes Somos</a>
-            <a href="{{ url_for('productos') }}">Productos</a>
-            <a href="#contacto">Contacto</a>
-        </nav>
-    </header>
 
-    <main class="carrito-section">
-        <h2>Tu Carrito</h2>
+  {% include 'header.html' %}
 
-        <div id="carrito-productos">
-            <!-- Cada producto será insertado aquí con JavaScript -->
-        </div>
+  <main class="carrito-section">
+    <h2>Tu Carrito</h2>
+    <div id="carrito-productos"></div>
+    <div class="total-carrito">
+      Total: $<span id="total-carrito">0.00</span>
+    </div>
+    <button id="enviar-whatsapp">Enviar Pedido por WhatsApp</button>
+    <button id="cancelar-pedido">Cancelar Pedido</button>
+  </main>
 
-        <div class="total-carrito">
-            Total: $<span id="total-carrito">0.00</span>
-        </div>
+  {% include 'footer.html' %}
 
-        <button id="enviar-whatsapp">Enviar Pedido por WhatsApp</button>
-    </main>
+  <!-- Chatbot -->
+  <div id="chatbot-container">
+    <img id="chatbot-logo" src="{{ url_for('static', filename='chatbot_logo.png') }}" alt="Chatbot">
+    <div id="chatbox">
+      <div id="chatbox-header">
+        Chat Gustica
+        <button id="chatbox-close">✖</button>
+      </div>
+      <div id="chat-messages"></div>
+      <div id="chat-input">
+        <input type="text" id="user-input" placeholder="Escribe un mensaje...">
+        <button id="send-btn">Enviar</button>
+      </div>
+    </div>
+  </div>
 
-    {% include 'footer.html' %}
-
-    <script>
+  <script>
     let carrito = [
-        {nombre: "Piña", precio: 2.5, cantidad: 2, imagen: "{{ url_for('static', filename='piña.jpg') }}"},
-        {nombre: "Mango", precio: 3.0, cantidad: 1, imagen: "{{ url_for('static', filename='mango.jpg') }}"}
+      {nombre: "Piña", precio: 2.5, cantidad: 2, imagen: "{{ url_for('static', filename='piña.jpg') }}"},
+      {nombre: "Mango", precio: 3.0, cantidad: 1, imagen: "{{ url_for('static', filename='mango.jpg') }}"}
     ];
 
     const carritoDiv = document.getElementById('carrito-productos');
     const totalSpan = document.getElementById('total-carrito');
 
     function renderCarrito() {
-        carritoDiv.innerHTML = '';
-        let total = 0;
-        carrito.forEach((prod, index) => {
-            const prodDiv = document.createElement('div');
-            prodDiv.className = 'producto-carrito';
-            prodDiv.innerHTML = `
-                <img src="${prod.imagen}" alt="${prod.nombre}">
-                <div class="producto-info">
-                    <h4>${prod.nombre}</h4>
-                    <p>Precio: $${prod.precio.toFixed(2)}</p>
-                </div>
-                <div class="producto-cantidad">
-                    <input type="number" value="${prod.cantidad}" min="1" data-index="${index}">
-                    <span>$${(prod.precio * prod.cantidad).toFixed(2)}</span>
-                </div>
-            `;
-            carritoDiv.appendChild(prodDiv);
-            total += prod.precio * prod.cantidad;
-        });
-        totalSpan.textContent = total.toFixed(2);
+      carritoDiv.innerHTML = '';
+      let total = 0;
 
-        // actualizar cantidad
-        document.querySelectorAll('.producto-cantidad input').forEach(input => {
-            input.addEventListener('input', e => {
-                const idx = e.target.dataset.index;
-                carrito[idx].cantidad = parseInt(e.target.value) || 1;
-                renderCarrito();
-            });
+      carrito.forEach((prod, index) => {
+        const prodDiv = document.createElement('div');
+        prodDiv.className = 'producto-carrito';
+        prodDiv.innerHTML = `
+          <img src="${prod.imagen}" alt="${prod.nombre}">
+          <div class="producto-info">
+            <h4>${prod.nombre}</h4>
+            <p>Precio: $${prod.precio.toFixed(2)}</p>
+          </div>
+          <div class="producto-cantidad">
+            <input type="number" value="${prod.cantidad}" min="1" data-index="${index}">
+            <span>$${(prod.precio * prod.cantidad).toFixed(2)}</span>
+            <button class="eliminar-btn" data-index="${index}">×</button>
+          </div>
+        `;
+        carritoDiv.appendChild(prodDiv);
+        total += prod.precio * prod.cantidad;
+      });
+
+      totalSpan.textContent = total.toFixed(2);
+
+      // Actualizar cantidad
+      document.querySelectorAll('.producto-cantidad input').forEach(input => {
+        input.addEventListener('input', e => {
+          const idx = e.target.dataset.index;
+          carrito[idx].cantidad = parseInt(e.target.value) || 1;
+          renderCarrito();
         });
+      });
+
+      // Botones eliminar producto
+      document.querySelectorAll('.eliminar-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const idx = e.target.dataset.index;
+          carrito.splice(idx, 1);
+          renderCarrito();
+        });
+      });
     }
 
     renderCarrito();
 
     // Botón WhatsApp
     document.getElementById('enviar-whatsapp').addEventListener('click', () => {
-        let mensaje = 'Buenas, necesito:\n';
-        let total = 0;
-        carrito.forEach(prod => {
-            mensaje += `- ${prod.cantidad} x ${prod.nombre} ($${(prod.precio*prod.cantidad).toFixed(2)})\n`;
-            total += prod.precio*prod.cantidad;
-        });
-        mensaje += `Total: $${total.toFixed(2)}`;
-        const url = `https://wa.me/50660021483?text=${encodeURIComponent(mensaje)}`;
-        window.open(url, '_blank');
+      if(carrito.length === 0){
+        alert("Tu carrito está vacío.");
+        return;
+      }
+      let mensaje = 'Buenas, necesito:\n';
+      let total = 0;
+      carrito.forEach(prod => {
+        mensaje += `- ${prod.cantidad} x ${prod.nombre} ($${(prod.precio*prod.cantidad).toFixed(2)})\n`;
+        total += prod.precio*prod.cantidad;
+      });
+      mensaje += `Total: $${total.toFixed(2)}`;
+      const url = `https://wa.me/50660021483?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, '_blank');
     });
-    </script>
+
+    // Botón cancelar pedido
+    document.getElementById('cancelar-pedido').addEventListener('click', () => {
+      if(confirm("¿Deseas eliminar todos los productos del carrito?")){
+        carrito = [];
+        renderCarrito();
+      }
+    });
+  </script>
+
+  <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
 </body>
 </html>
