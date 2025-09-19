@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Referencias - Gustica</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='chatbot.css') }}" />
     <style>
         /* Fondo de la sección referencias */
         body {
@@ -83,19 +84,10 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
-        </div>
-        <nav>
-            <a href="{{ url_for('inicio') }}">Inicio</a>
-            <a href="{{ url_for('quienes') }}">Quiénes Somos</a>
-            <a href="{{ url_for('productos') }}">Productos</a>
-            <a href="{{ url_for('referencias') }}">Referencias</a>
-            <a href="#contacto">Contacto</a>
-        </nav>
-    </header>
+    <!-- HEADER -->
+    {% include 'header.html' %}
 
+    <!-- MAIN -->
     <main class="referencias-section">
         <h2>Referencias de Clientes y Socios</h2>
 
@@ -128,9 +120,28 @@
                 </p>
             </div>
         </div>
-
     </main>
 
+    <!-- FOOTER -->
     {% include 'footer.html' %}
+
+    <!-- CHATBOT -->
+    <div id="chatbot-container">
+        <img id="chatbot-logo" src="{{ url_for('static', filename='chatbot_logo.png') }}" alt="Chatbot">
+        <div id="chatbox">
+            <div id="chatbox-header">
+                Chat Gustica
+                <button id="chatbox-close">✖</button>
+            </div>
+            <div id="chat-messages"></div>
+            <div id="chat-input">
+                <input type="text" id="user-input" placeholder="Escribe un mensaje...">
+                <button id="send-btn">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot JS -->
+    <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
 </body>
 </html>
