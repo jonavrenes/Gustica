@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Carrito - Gustica</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <!-- Estilos del chatbot -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='chatbot.css') }}">
 </head>
 <body>
     <header>
@@ -91,5 +93,31 @@
         window.open(url, '_blank');
     });
     </script>
+
+    <!-- 🚀 Chatbot -->
+    <div id="chatbot-container">
+        <!-- Logo flotante -->
+        <img id="chatbot-logo" src="{{ url_for('static', filename='chatbot-logo.png') }}" alt="Chatbot">
+
+        <!-- Caja del chat -->
+        <div id="chatbox">
+            <div id="chatbox-header">
+                Chat Gustica
+                <button id="chatbox-close">✖</button>
+            </div>
+
+            <!-- Mensajes -->
+            <div id="chat-messages"></div>
+
+            <!-- Input -->
+            <div id="chat-input">
+                <input type="text" id="user-input" placeholder="Escribe un mensaje...">
+                <button id="send-btn">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script del chatbot -->
+    <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
 </body>
 </html>
