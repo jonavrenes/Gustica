@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='chatbot.css') }}" />
   <style>
-    /* Pequeño ajuste para el botón de eliminar */
     .producto-carrito {
       display: flex;
       align-items: center;
@@ -86,14 +85,14 @@
     </div>
   </div>
 
+  <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
   <script>
-    let carrito = [
-      {nombre: "Piña", precio: 2.5, cantidad: 2, imagen: "{{ url_for('static', filename='piña.jpg') }}"},
-      {nombre: "Mango", precio: 3.0, cantidad: 1, imagen: "{{ url_for('static', filename='mango.jpg') }}"}
-    ];
-
+    // ====== CARRITO LOCALSTORAGE ======
     const carritoDiv = document.getElementById('carrito-productos');
     const totalSpan = document.getElementById('total-carrito');
+
+    // Cargar carrito desde localStorage
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
     function renderCarrito() {
       carritoDiv.innerHTML = '';
@@ -119,8 +118,9 @@
       });
 
       totalSpan.textContent = total.toFixed(2);
+      localStorage.setItem('carrito', JSON.stringify(carrito));
 
-      // Actualizar cantidad
+      // Cambiar cantidad
       document.querySelectorAll('.producto-cantidad input').forEach(input => {
         input.addEventListener('input', e => {
           const idx = e.target.dataset.index;
@@ -129,7 +129,7 @@
         });
       });
 
-      // Botones eliminar producto
+      // Eliminar producto
       document.querySelectorAll('.eliminar-btn').forEach(btn => {
         btn.addEventListener('click', e => {
           const idx = e.target.dataset.index;
@@ -141,7 +141,7 @@
 
     renderCarrito();
 
-    // Botón WhatsApp
+    // WhatsApp
     document.getElementById('enviar-whatsapp').addEventListener('click', () => {
       if(carrito.length === 0){
         alert("Tu carrito está vacío.");
@@ -154,19 +154,18 @@
         total += prod.precio*prod.cantidad;
       });
       mensaje += `Total: $${total.toFixed(2)}`;
-      const url = `https://wa.me/50660021483?text=${encodeURIComponent(mensaje)}`;
+      const url = `https://wa.me/50686285703?text=${encodeURIComponent(mensaje)}`;
       window.open(url, '_blank');
     });
 
-    // Botón cancelar pedido
+    // Cancelar carrito
     document.getElementById('cancelar-pedido').addEventListener('click', () => {
       if(confirm("¿Deseas eliminar todos los productos del carrito?")){
         carrito = [];
+        localStorage.removeItem('carrito'); // elimina del localStorage
         renderCarrito();
       }
     });
   </script>
-
-  <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
 </body>
 </html>
