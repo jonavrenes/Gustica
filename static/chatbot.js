@@ -8,10 +8,18 @@ const sendBtn = document.getElementById("send-btn");
 
 let userName = null;
 
+// === Productos Gustica ===
 const productos = {
-  "chatbot": { nombre: "Chatbot Inteligente", precio: "$125.9", img: "static/chatbot.jpg", video: "video_chatbot.mp4" },
-  "web": { nombre: "Página Web", precio: "$199.9", img: "static/webdesign.jpg", video: "video_web.mp4" },
-  "automatizacion": { nombre: "Automatización Empresarial", precio: "$259.9", img: "static/automation.jpg", video: "video_automatizacion.mp4" }
+  "mango": { 
+    nombre: "Mango Congelado 1kg", 
+    precio: "$3.00", 
+    img: "static/mango.jpg"
+  },
+  "pina": { 
+    nombre: "Piña Congelada 1kg", 
+    precio: "$2.50", 
+    img: "static/piña.jpg"
+  }
 };
 
 // Mostrar u ocultar chat al hacer click en el logo
@@ -40,7 +48,7 @@ function addMessage(sender, htmlContent) {
 
 // Inicializar chat
 function initChat() {
-  addMessage("bot", "¡Hola! 👋 Soy el asistente de <b>AI Connect</b>.");
+  addMessage("bot", "🍍🥭 ¡Hola! Bienvenido a <b>Gustica Frutas Congeladas</b>.");
   addMessage("bot", "¿Cuál es tu nombre?");
 }
 
@@ -71,19 +79,22 @@ function showInitialOptions() {
 function contactAsesor(producto = null) {
   let mensaje = producto 
       ? `Hola quiero información sobre ${producto}` 
-      : "Hola quiero hacerte una consulta";
+      : "Hola quiero hacerte una consulta sobre frutas congeladas";
 
   addMessage("bot", `
     <p>Selecciona la plataforma para contactar a un asesor${producto ? ` sobre <b>${producto}</b>` : ''}:</p>
     <div class="contact-buttons">
-      <a href="https://wa.me/50660021483?text=${encodeURIComponent(mensaje)}" target="_blank">
+      <a href="https://wa.me/50686285703?text=${encodeURIComponent(mensaje)}" target="_blank">
         <img src="static/whatsapp.png" alt="WhatsApp">
       </a>
-      <a href="https://www.facebook.com/share/1CwHCKScQZ/?mibextid=wwXIfr" target="_blank">
+      <a href="https://www.facebook.com/lalolaproductos?mibextid=wwXIfr" target="_blank">
         <img src="static/facebook.png" alt="Facebook">
       </a>
-      <a href="https://www.instagram.com/aic_onnect?igsh=MXZwbnFuY3RjbWU3Yw==" target="_blank">
+      <a href="https://www.instagram.com/productoslalola?utm_source=ig_web_button_share_sheet" target="_blank">
         <img src="static/instagram.png" alt="Instagram">
+      </a>
+      <a href="mailto:contacto@frutascongeladas.com?subject=Consulta&body=${encodeURIComponent(mensaje)}" target="_blank">
+        <img src="static/email.png" alt="Email">
       </a>
     </div>
     <div class="option-button" onclick="restart()">Volver</div>
@@ -109,15 +120,9 @@ function showProductOptions(key) {
   const prod = productos[key];
   addMessage("bot", `
     <p><b>${prod.nombre}</b> - Precio: ${prod.precio}</p>
-    <div class="option-button" onclick="showVideo('${prod.video}')">¿Qué es?</div>
     <div class="option-button" onclick="contactAsesor('${prod.nombre}')">Contactar a un asesor</div>
+    <div class="option-button" onclick="restart()">Volver</div>
   `);
-}
-
-// Mostrar video de producto
-function showVideo(videoFile) {
-  const videoPath = `static/${videoFile}`;
-  addMessage("bot", `<video controls src="${videoPath}"></video>`);
 }
 
 // Reiniciar chat
