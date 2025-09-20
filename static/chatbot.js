@@ -75,7 +75,7 @@ function showInitialOptions() {
   `);
 }
 
-// Contactar a un asesor
+// Contactar a un asesor (solo WhatsApp, Facebook e Instagram)
 function contactAsesor(producto = null) {
   let mensaje = producto 
       ? `Hola quiero información sobre ${producto}` 
@@ -92,9 +92,6 @@ function contactAsesor(producto = null) {
       </a>
       <a href="https://www.instagram.com/productoslalola?utm_source=ig_web_button_share_sheet" target="_blank">
         <img src="static/instagram.png" alt="Instagram">
-      </a>
-      <a href="mailto:contacto@frutascongeladas.com?subject=Consulta&body=${encodeURIComponent(mensaje)}" target="_blank">
-        <img src="static/email.png" alt="Email">
       </a>
     </div>
     <div class="option-button" onclick="restart()">Volver</div>
