@@ -186,13 +186,14 @@
         let precio = precioUnitario;
         let cantidad = parseInt(cantidadInput.value);
         let total = precio * cantidad;
+        let imagen = modalImagen.src; // ✅ guardamos la imagen también
 
         let index = carrito.findIndex(p => p.nombre === nombre);
         if(index >= 0){
             carrito[index].cantidad += cantidad;
             carrito[index].total += total;
         } else {
-            carrito.push({nombre, precio, cantidad, total});
+            carrito.push({nombre, precio, cantidad, total, imagen}); // ✅ ahora incluye la imagen
         }
 
         localStorage.setItem('carrito', JSON.stringify(carrito));
